@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Asistente Fabep</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="brand">FABEP SYSTEMS®</div>
+      <h1>Asistente Fabep</h1>
+      <p>Asesoramiento técnico-comercial inicial</p>
+    </header>
+    <p class="notice">Las mezclas se dosifican por peso. No compartas datos sensibles. Las consultas se procesan con OpenAI.</p>
+    <section id="log" class="messages" role="log" aria-label="Conversación" aria-live="polite" aria-relevant="additions text">
+      <div class="msg assistant">Hola. ¿En qué trabajo o producto Fabep te puedo ayudar?</div>
+    </section>
+    <button id="new-chat" type="button" class="new-chat">Nueva conversación</button>
+    <p id="status" role="status" aria-live="polite"></p>
+    <form id="chat-form">
+      <label for="message" class="sr-only">Tu consulta</label>
+      <input id="message" name="message" autocomplete="off" maxlength="12000" placeholder="Escribí tu consulta…" required>
+      <button id="send" type="submit">Enviar</button>
+    </form>
+    <footer>La información técnica específica puede requerir validación de Fabep Systems®.</footer>
+  </main>
+</body>
+</html>

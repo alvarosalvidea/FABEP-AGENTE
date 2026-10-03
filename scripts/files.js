@@ -1,0 +1,9 @@
+export const PUBLIC_FILES = [
+  'package.json', 'package-lock.json', 'server.js', 'README.md', 'VALIDATION.md',
+  '.env.example', '.gitignore', '.vercelignore', 'vercel.json',
+  'public/index.html', 'public/style.css', 'public/app.js',
+  'api/health.js', 'api/chat.js', 'api/calculate.js', 'api/session.js',
+  'lib/config.js', 'lib/http.js', 'lib/session.js', 'lib/calculations.js', 'lib/legacy-calculations.js', 'lib/policy.js', 'lib/provider-errors.js',
+  'scripts/files.js', 'scripts/check.js', 'scripts/package-public.js', 'scripts/verify-openai.js', 'scripts/smoke-live.js',
+  'test/runtime.test.js', 'test/frontend.test.js', '.github/workflows/runtime.yml'
+];
