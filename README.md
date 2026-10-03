@@ -68,4 +68,6 @@ El frontend publicado conserva las clases, IDs y diseño de GitHub, con mejoras 
 
 La derivación humana orienta a Álvaro o Susana por el canal habitual del usuario. No hay integración para enviar avisos, gestionar ventas o confirmar pagos. Las reglas del prompt reducen respuestas incorrectas pero no constituyen una garantía de exactitud del modelo.
 
+Los errores de saldo, cuota o límites de gasto del proveedor devuelven HTTP 503 con un mensaje público de indisponibilidad, sin revelar datos financieros. Los límites temporales de solicitudes devuelven HTTP 429. No se hacen reintentos automáticos ni se modifican créditos o facturación. El diagnóstico local confirmó `credit_balance_exhausted`: para validar el chat real el titular debe restablecer créditos en su cuenta OpenAI; cambiar de modelo no elimina ese bloqueo.
+
 Fuentes de implementación: [Responses y estado de conversación](https://developers.openai.com/api/docs/guides/conversation-state), [File Search](https://developers.openai.com/api/docs/guides/tools-file-search), [configuración Vercel](https://vercel.com/docs/project-configuration/vercel-json).

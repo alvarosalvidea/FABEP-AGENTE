@@ -4,6 +4,7 @@ import { body, prepare } from '../lib/http.js';
 import { readSession, writeSession } from '../lib/session.js';
 import { PUBLIC_POLICY, humanHandoff, HANDOFF_TEXT, safetyIncident, SAFETY_TEXT } from '../lib/policy.js';
 import { CALCULATE_TOOL, CALCULATION_TOOLS, calculate, runCalculation, CalculationError } from '../lib/calculations.js';
+import { requiresAccountAction } from '../lib/provider-errors.js';
 export function createChatHandler({ createResponse } = {}) {
   return async function chat(req, res) {
     if (!prepare(req, res, 'POST')) return;
@@ -52,6 +53,7 @@ export function createChatHandler({ createResponse } = {}) {
       res.status(200).json({ text: response.output_text });
     } catch (error) {
       if (error instanceof ConfigurationError) return res.status(503).json({ error: 'El asistente aún requiere configuración del servidor.' });
+      if (requiresAccountAction(error)) return res.status(503).json({ error: 'El asistente está temporalmente no disponible. Consultá con Álvaro o Susana por tu canal habitual.' });
       if (error.status === 429) return res.status(429).json({ error: 'El asistente está ocupado. Intentá nuevamente más tarde.' });
       res.status(502).json({ error: 'No se pudo obtener una respuesta. Intentá nuevamente o consultá con Álvaro o Susana.' });
     }

@@ -35,6 +35,7 @@
 !/lib/calculations.js
 !/lib/legacy-calculations.js
 !/lib/policy.js
+!/lib/provider-errors.js
 !/scripts/files.js
 !/scripts/check.js
 !/scripts/package-public.js

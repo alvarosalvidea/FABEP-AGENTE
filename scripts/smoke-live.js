@@ -8,6 +8,7 @@ import { config } from '../lib/config.js';
 import { createChatHandler } from '../api/chat.js';
 import sessionHandler from '../api/session.js';
 import { readSession } from '../lib/session.js';
+import { providerErrorCode } from '../lib/provider-errors.js';
 dotenv.config({ path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../.env'), quiet: true });
 const settings = config({ requireOpenAI: true });
 const client = new OpenAI({ apiKey: settings.apiKey, timeout: 45000, maxRetries: 0 });
@@ -20,7 +21,11 @@ const chat = createChatHandler({ createResponse: async params => {
   if (Array.isArray(params.input)) toolOutputs += params.input.filter(item => item.type === 'function_call_output').length;
   try { return await client.responses.create(params); }
   catch (error) {
-    providerFailure = { httpStatus: error.status || null, code: ['insufficient_quota', 'model_not_found', 'invalid_api_key'].includes(error.code) ? error.code : 'provider_error' };
+    const candidates = [error.code, error.error?.code, error.error?.error?.code];
+    const code = providerErrorCode(error);
+    const retry = Number(error.headers?.get?.('retry-after'));
+    const machineCode = candidates.find(value => typeof value === 'string' && /^[a-z][a-z0-9_]{0,79}$/.test(value)) || null;
+    providerFailure = { httpStatus: error.status || null, code, machineCode, retryAfterSeconds: Number.isFinite(retry) && retry > 0 ? retry : null };
     throw error;
   }
 } });

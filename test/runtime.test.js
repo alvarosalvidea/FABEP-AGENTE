@@ -218,3 +218,21 @@ test('HTTP conserva cálculos con campos snake_case y reset DELETE sin JSON', as
     assert.equal((await fetch(base + '/api/session', { method: 'DELETE', headers: { origin: 'https://other.example' } })).status, 403);
   } finally { await new Promise(resolve => server.close(resolve)); }
 });
+test('saldo o cuota agotados se diferencian de un límite temporal sin revelar datos de cuenta', async () => {
+  for (const error of [
+    { status: 429, code: 'credit_balance_exhausted' },
+    { status: 429, error: { code: 'project_spend_limit_exceeded' } },
+    { status: 429, error: { error: { code: 'insufficient_quota' } } }
+  ]) {
+    const res = response();
+    await createChatHandler({ createResponse: async () => { throw error; } })(request(), res);
+    assert.equal(res.statusCode, 503);
+    assert.match(res.data.error, /temporalmente no disponible/);
+    assert.ok(!JSON.stringify(res.data).includes('credit_balance'));
+    assert.ok(!JSON.stringify(res.data).includes('quota'));
+    assert.equal(res.headers['set-cookie'], undefined);
+  }
+  const limited = response();
+  await createChatHandler({ createResponse: async () => { throw { status: 429, code: 'rate_limit_exceeded' }; } })(request(), limited);
+  assert.equal(limited.statusCode, 429); assert.match(limited.data.error, /Intentá nuevamente/);
+});
